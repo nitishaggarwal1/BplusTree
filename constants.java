@@ -1,6 +1,14 @@
 public class constants{
     public static final int DBLOAD_ARG_COUNT = 3;
-    public static final int DBQUERY_ARG_COUNT = 2;
+    public static final int DBQUERY_ARG_COUNT = 10;
+    public static final int DBQUERY_ARG1 = 2;
+    public static final int DBQUERY_ARG2 = 3;
+    public static final int DBQUERY_ARG3 = 4;
+    public static final int DBQUERY_ARG4 = 5;
+    public static final int DBQUERY_ARG5 = 6;
+    public static final int DBQUERY_ARG6 = 7;
+    public static final int DBQUERY_ARG7 = 8;
+    public static final int DBQUERY_ARG8 = 9;
 
     public static final int DBLOAD_PAGE_SIZE_ARG = 1;
     public static final int DBQUERY_PAGE_SIZE_ARG = 1;

@@ -46,7 +46,7 @@ public class dbload {
         boolean exceptionOccurred = false;
         final int numBytesFixedLengthRecord = constants.TOTAL_SIZE;
         int numRecordsPerPage = pageSize/numBytesFixedLengthRecord;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 
         BufferedReader reader = null;
         FileOutputStream outputStream = null;
@@ -83,7 +83,7 @@ public class dbload {
                 int counts = Integer.parseInt(valuesAsStrings[constants.COUNTS_POS]);
                 String sdtName = sensorIdString + dateTimeString;
                 int sensorId = Integer.parseInt(sensorIdString);
-
+                System.out.println(dateTimeString);
                 // parse datetime field into a date object, then get long datatype representation
                 Date date = dateFormat.parse(dateTimeString);
                 long dateTimeLongRep = date.getTime();
