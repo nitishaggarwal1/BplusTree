@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class dbquery {
-
     // Reads in a binary file of the argument-specified pagesize, prints out matching records
     public static void main(String[] args) throws IOException {
 
