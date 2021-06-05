@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class dbload {
-
     /*
      * Loads data from an input csv into fixed-length records. Record fields are:
      * SDT_NAME field = 24 bytes, offset = 0
