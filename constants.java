@@ -1,4 +1,5 @@
 public class constants{
+
     public static final int DBLOAD_ARG_COUNT = 3;
     public static final int DBQUERY_ARG_COUNT = 10;
     public static final int DBQUERY_ARG1 = 2;
