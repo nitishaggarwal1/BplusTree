@@ -617,33 +617,24 @@ public class BPlusTree {
      System.out.println(record);
   }
   
-  public static void main(String[] args) throws IOException {
-      
-        // check for correct number of arguments
-        if (args.length != constants.DBQUERY_ARG_COUNT) {
-            System.out.println("Error: Incorrect number of arguments were input");
-            return;
-        }
-
-        int sv1 = Integer.parseInt(args[constants.DBQUERY_ARG1]);
-        int sv2 = Integer.parseInt(args[constants.DBQUERY_ARG2]);
-        int rv1 = Integer.parseInt(args[constants.DBQUERY_ARG3]);
-        int rv2 = Integer.parseInt(args[constants.DBQUERY_ARG4]);
-        int sv3 = Integer.parseInt(args[constants.DBQUERY_ARG5]);
-        int sv4 = Integer.parseInt(args[constants.DBQUERY_ARG6]);
-        int rv3 = Integer.parseInt(args[constants.DBQUERY_ARG7]);
-        int rv4 = Integer.parseInt(args[constants.DBQUERY_ARG8]);
-        
+  //1.
+  public static BPlusTree loadHeap(int size) throws IOException
+  {
+      System.out.println("Please Input fanout");
+      Scanner in = new Scanner(System.in);
+      int fanout = in.nextInt();
+              
+        System.out.println("Loading Heap file in B+ Tree");
         long startTime = 0;
         long finishTime = 0;
         
         startTime = System.nanoTime();
         
         BPlusTree bpt = null;
-        bpt = new BPlusTree(1000);
+        bpt = new BPlusTree(fanout);
         
         int record_id = 0;
-        int recordSize = Integer.parseInt(args[constants.DBQUERY_PAGE_SIZE_ARG]);
+        int recordSize = size;
 
         String datafile = "heap." + recordSize;
         int numBytesInOneRecord = constants.TOTAL_SIZE;
@@ -692,94 +683,98 @@ public class BPlusTree {
             }
         }
 
-        bpt.search(rv1, rv2, false);
-        startTime = System.nanoTime();
-        //equality search
-        System.out.println("equality search with Fanout 1000");
-        bpt.search(sv1, true);
-        bpt.search(sv2, true);
-        
-        //range search
-        System.out.println("range search with Fanout 1000");
-        bpt.search(rv1, rv2, true);
-        
         finishTime = System.nanoTime();
         
-        long timeInMilliseconds = (finishTime - startTime)/(constants.MILLISECONDS_PER_SECOND/1000);
-        System.out.println("Time taken: " + timeInMilliseconds + " ns");
+        long timeInMilliseconds = (finishTime - startTime)/(constants.MILLISECONDS_PER_SECOND);
+        System.out.println("Time taken: " + timeInMilliseconds + " ms");
         
-        System.out.println();
+        System.out.println("Please enter 1 to load heap file in b plus tree.");
+        System.out.println("Please enter 2 for searching using SDT_NAME field.");
+        System.out.println("Please enter 3 for doing range search using SDT_NAME field.");
+        System.out.println("Please enter 4 to exit.");
         
-        startTime = 0;
-        finishTime = 0;
+        return bpt;
+  }
+  
+  public static void EqualSearch(BPlusTree bpt)
+  {
+      long startTime = 0;
+      long finishTime = 0;
         
-        startTime = System.nanoTime();
+      System.out.println("Please Input Equal search value");
+      Scanner in = new Scanner(System.in);
+      int sv1 = in.nextInt();
+      
+      startTime = System.nanoTime();
+      //equality search
+      System.out.println("equality search with Fanout " + bpt.m);
+      bpt.search(sv1, true);
+      
+      finishTime = System.nanoTime();
         
-        bpt = null;
-        bpt = new BPlusTree(200);
+      long timeInMilliseconds = (finishTime - startTime)/(constants.MILLISECONDS_PER_SECOND);
+      System.out.println("Time taken: " + timeInMilliseconds + " ms");
+      
+      System.out.println("Please enter 1 to load heap file in b plus tree.");
+      System.out.println("Please enter 2 for searching using SDT_NAME field.");
+      System.out.println("Please enter 3 for doing range search using SDT_NAME field.");
+      System.out.println("Please enter 4 to exit.");
+  }
+  
+  public static void RangeSearch(BPlusTree bpt)
+  {
+      long startTime = 0;
+      long finishTime = 0;
         
-        record_id = 0;
-        recordSize = Integer.parseInt(args[constants.DBQUERY_PAGE_SIZE_ARG]);
-
-        datafile = "heap." + recordSize;
-        numBytesInOneRecord = constants.TOTAL_SIZE;
-        numBytesInSdtnameField = constants.STD_NAME_SIZE;
-        numRecordsPerPage = recordSize/numBytesInOneRecord;
-        page = new byte[recordSize];
-        inStream = null;
-
-        try {
-            inStream = new FileInputStream(datafile);
-            int numBytesRead = 0;
-            // Create byte arrays for each field
-            byte[] sdtnameBytes = new byte[numBytesInSdtnameField];
-            
-            // until the end of the binary file is reached
-            while ((numBytesRead = inStream.read(page)) != -1) {
-                // Process each record in page
-                for (int i = 0; i < numRecordsPerPage; i++) {
-                    byte[] recordBytes = new byte[constants.TOTAL_SIZE];
-                    // Copy record's SdtName (field is located at multiples of the total record byte length)
-                    System.arraycopy(page, (i*numBytesInOneRecord), sdtnameBytes, 0, numBytesInSdtnameField);
-
-                    // Check if field is empty; if so, end of all records found (packed organisation)
-                    if (sdtnameBytes[0] == 0) {
-                        // can stop checking records
-                        break;
-                    }
-
-                    System.arraycopy(page, (i*numBytesInOneRecord), recordBytes, 0, constants.TOTAL_SIZE);
-                    
-                    record_id++;
-                    bpt.insert(record_id, recordBytes);
-                }
-            }
+      startTime = System.nanoTime();
+      
+      System.out.println("Please Input Range search value1");
+      Scanner in = new Scanner(System.in);
+      int rv1 = in.nextInt();
+      
+      System.out.println("Please Input Range search value2");
+      int rv2 = in.nextInt();
+      
+      //range search
+      System.out.println("range search with Fanout " + bpt.m);
+      bpt.search(rv1, rv2, true);
+      
+      finishTime = System.nanoTime();
+        
+      long timeInMilliseconds = (finishTime - startTime)/(constants.MILLISECONDS_PER_SECOND);
+      System.out.println("Time taken: " + timeInMilliseconds + " ms");
+      
+      System.out.println("Please enter 1 to load heap file in b plus tree.");
+      System.out.println("Please enter 2 for searching using SDT_NAME field.");
+      System.out.println("Please enter 3 for doing range search using SDT_NAME field.");
+      System.out.println("Please enter 4 to exit.");
+  }
+  
+  public static void main(String[] args) throws IOException {
+      
+        System.out.println("Please enter the page size");
+        Scanner in = new Scanner(System.in);
+        int rSize = in.nextInt();
+        System.out.println("Please enter the page size" + rSize);
+        //int rSize = Integer.parseInt(args[constants.DBQUERY_PAGE_SIZE_ARG]);
+        
+        System.out.println("Please enter 1 to load heap file in b plus tree.");
+        System.out.println("Please enter 2 for searching using SDT_NAME field.");
+        System.out.println("Please enter 3 for doing range search using SDT_NAME field.");
+        System.out.println("Please enter 4 to exit.");
+        
+        BPlusTree bpt = null;
+        int command = in.nextInt();
+        while(command != 4)
+        {
+            if(command == 1)
+                bpt = loadHeap(rSize);
+            else if(command == 2)
+                EqualSearch(bpt);
+            else if(command == 3)
+                RangeSearch(bpt);
+            command = in.nextInt();
         }
-        catch (FileNotFoundException e) {
-            System.err.println("File not found " + e.getMessage());
-        }
-        catch (IOException e) {
-            System.err.println("IO Exception " + e.getMessage());
-        }
-        finally {
-
-            if (inStream != null) {
-                inStream.close();
-            }
-        }
-
-        //equality search
-        System.out.println("equality search  with Fanout 200");
-        bpt.search(sv3, true);
-        bpt.search(sv4, true);
         
-        //range search
-        System.out.println("range search  with Fanout 200");
-        bpt.search(rv3, rv4, true);
-        
-        finishTime = System.nanoTime();
-        
-        timeInMilliseconds = (finishTime - startTime)/(constants.MILLISECONDS_PER_SECOND/1000);
-        System.out.println("Time taken: " + timeInMilliseconds + " ns");
   }
 }
